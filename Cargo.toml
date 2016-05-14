@@ -1,0 +1,8 @@
+[package]
+name = "trhasher"
+version = "0.1.0"
+authors = ["ticki <ticki@users.noreply.github.com>"]
+
+[dependencies]
+itertools = "0.4.15"
+rand = "0.3.14"
