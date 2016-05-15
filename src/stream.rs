@@ -35,11 +35,11 @@ impl fmt::Display for Transforms {
 }
 
 impl Transforms {
-    pub fn new<B, I, T, H>(builder: B, iter: I) -> Transforms
-        where B: BuildHasher<Hasher = H>,
-              I: Iterator<Item = T> + Clone,
-              T: Hash,
-              H: Clone + Hasher {
+    pub fn new<B, I>(builder: B, iter: I) -> Transforms
+        where B: BuildHasher,
+              B::Hasher: Clone,
+              I: Iterator + Clone,
+              I::Item: Hash {
         let hasher = builder.build_hasher();
         let hash = iter.map(|x| {
             let mut hasher = hasher.clone();

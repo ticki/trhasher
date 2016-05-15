@@ -1,3 +1,28 @@
+use std::marker::PhantomData;
+
+use rand;
+
+#[derive(Clone, Copy)]
+pub struct RandIter<T> {
+    _phantom: PhantomData<T>,
+}
+
+impl<T> RandIter<T> {
+    pub fn new() -> RandIter<T> {
+        RandIter {
+            _phantom: PhantomData,
+        }
+    }
+}
+
+impl<T: rand::Rand> Iterator for RandIter<T> {
+    type Item = T;
+
+    fn next(&mut self) -> Option<T> {
+        rand::random()
+    }
+}
+
 #[derive(Copy, Clone)]
 pub struct BadRand {
     state: u64,

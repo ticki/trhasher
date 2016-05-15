@@ -25,7 +25,7 @@ impl fmt::Display for Report {
         writeln!(f, "buckets χ²:         {}", self.buckets_dist)?;
         writeln!(f, "average:            {}", self.average)?;
         writeln!(f, "AND zero:           {}", self.and_zero)?;
-        write!  (f, "time:               {}", self.time)?;
+        write!  (f, "time:               {:3>} s. {:9>} ns.", self.time.as_secs(), self.time.subsec_nanos())?;
     }
 }
 

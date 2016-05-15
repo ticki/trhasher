@@ -21,7 +21,7 @@ It uses the following data sets:
 Each of these are tested with the hashing function, combined with a,
 potentially, entropy-reducing bijective function. This way we can notice
 patterns that wasn't obvious if we simply analyzed it directly. The following
-transforming functions are used:
+transforming functions/methods are used:
 
 1. Identity (i.e., no function applied).
 2. XOR fold (i.e., XOR adjacent hashes in the stream), this is good at

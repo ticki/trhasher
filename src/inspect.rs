@@ -1,11 +1,9 @@
 use std::hash::{Hasher, BuildHasher};
 use std::{time, iter, fmt};
 
-use bad_rand::BadRand;
+use {rng, data, test, stream, analysis};
 
-use {rand, data, test, stream, analysis};
-
-struct Test {
+pub struct Test {
     dict: stream::Transforms,
     rand: stream::Transforms,
     ascii: stream::Transforms,
@@ -42,22 +40,24 @@ impl fmt::Display for Test {
         writeln!(f, "deterministic:      {}", self.deterministic)?;
         writeln!(f, "- Performance")?;
         writeln!(f, "GB/s:               {}", self.gb_per_sec)?;
-        writeln!(f, "total time:         {}", self.total_time)?;
+        write!  (f, "total time:         {:3>} s. {:9>} ns.", self.total_time.as_secs(), self.total_time.subsec_nanos())?;
         writeln!(f, "- Final result")?;
-        write  !(f, "points:             {}", self.points)?;
+        write!  (f, "points:             {}", self.points)?;
     }
 }
 
 impl Test {
-    fn test<B: BuildHasher<Hasher = H>, H: Clone + Hasher>(builder: B) -> Test {
+    pub fn test<B>(builder: B) -> Test
+        where B: BuildHasher,
+              B::Hasher: Clone {
         let time = time::Instant::now();
         let h = builder.build_hasher();
 
         Test {
             dict: stream::Transforms::new(builder, data::DICT.lines()),
-            rand: stream::Transforms::new(builder, iter::repeat(()).map(|_| rand::random::<u64>())),
-            ascii: stream::Transforms::new(builder, iter::repeat(()).map(|_| rand::random::<char>())),
-            bad_rand: stream::Transforms::new(builder, BadRand::new()),
+            rand: stream::Transforms::new(builder, rng::RandIter::<u64>::new()),
+            ascii: stream::Transforms::new(builder, rng::RandIter::<char>::new()),
+            bad_rand: stream::Transforms::new(builder, rng::BadRand::new()),
             num: stream::Transforms::new(builder, 0..),
             primes: stream::Transforms::new(builder, data::PRIMES.iter()),
             rehash: analysis::Report::new(Rehasher {
